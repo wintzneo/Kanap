@@ -1,12 +1,10 @@
-main();
-
-async function main() {
-  const articles = await getArticles();
-
+(async function() {
+  const articles = await getArticles()
+  
   for (article of articles) {
-    viewArticle(article);
+    viewArticle(article)
   }
-}
+})()
 
 function getArticles(articleId) {
   return fetch("http://localhost:3000/api/products")
@@ -22,12 +20,14 @@ function getArticles(articleId) {
 }
 
 function viewArticle(article) {
-  document.getElementById("items").innerHTML += `
-    <a href="product.html?id=${article._id}">
-        <article>
-            <img src="${article.imageUrl}" alt="${article.altTxt}">
-            <h3 class="productName">${article.name}</h3>
-            <p class="productDescription">${article.description}</p>
-        </article>
-    </a>`;
+  const templateElt = document.getElementById("templateArticle")
+  const cloneElt = document.importNode(templateElt.content, true)
+
+  cloneElt.getElementById("link").href += "?id=" + article._id
+  cloneElt.getElementById("img").src = article.imageUrl
+  cloneElt.getElementById("img").alt = article.altTxt
+  cloneElt.getElementById("productName").textContent = article.name
+  cloneElt.getElementById("productDescription").textContent = article.description
+
+  document.getElementById("items").appendChild(cloneElt)
 }
