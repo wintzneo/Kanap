@@ -48,8 +48,8 @@ function addToBasket(article) {
       id: article._id,
       name: article.name,
       image: article.imageUrl,
-      prix: article.price /100,
-      quantity: Number (numberProduct.value),
+      price: article.price / 100,
+      quantity: numberProduct.value,
       color: color.value,
     };
     let sendLocalStorage = JSON.parse(localStorage.getItem("product"));
@@ -69,7 +69,7 @@ function addToBasket(article) {
         window.location.href = "index.html";
       }
     };
-    if (sendLocalStorage) {
+    if (!sendLocalStorage) {
       let InBasket = false;
       sendLocalStorage.forEach((article) => {
         if (
@@ -81,13 +81,13 @@ function addToBasket(article) {
         }
       });
       if (!InBasket) {
-        sendLocalStorage.push(productBasket);
+        sendLocalStorage.push(articleBasket);
       }
       localStorage.setItem("product", JSON.stringify(sendLocalStorage));
       confirmation();
     } else {
       sendLocalStorage = [];
-      sendLocalStorage.push(productBasket);
+      sendLocalStorage.push(articleBasket);
       localStorage.setItem("product", JSON.stringify(sendLocalStorage));
       confirmation();
     }
