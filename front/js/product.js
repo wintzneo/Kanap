@@ -42,17 +42,18 @@ function addToBasket(article) {
   let sendToCart = document.getElementById("addToCart");
   let color = document.getElementById("colors");
 
+
   sendToCart.addEventListener("click", (event) => {
     event.preventDefault();
     let articleBasket = {
       id: article._id,
       name: article.name,
       image: article.imageUrl,
-      price: article.price / 100,
-      quantity: numberProduct.value,
+      price: article.price,
+      quantity: Number(numberProduct.value),
       color: color.value,
     };
-    let sendLocalStorage = JSON.parse(localStorage.getItem("product"));
+
 
     let confirmation = () => {
       if (
@@ -69,21 +70,27 @@ function addToBasket(article) {
         window.location.href = "index.html";
       }
     };
-    if (!sendLocalStorage) {
-      let InBasket = false;
-      sendLocalStorage.forEach((article) => {
-        if (
-          article._id === articleBasket._id &&
-          color.value === articleBasket.color
-        ) {
-          article.quantity += articleBasket.quantity;
-          InBasket = true;
+
+    let sendLocalStorage = JSON.parse(localStorage.getItem("product"));
+
+    if (sendLocalStorage) {
+      const newBasket = sendLocalStorage.map(articleIn => {
+        if (articleIn.id === articleBasket.id && articleIn.color === articleBasket.color) {
+          articleIn.quantity = articleIn.quantity + articleBasket.quantity; 
         }
+
+        return articleIn;
       });
-      if (!InBasket) {
-        sendLocalStorage.push(articleBasket);
+
+      const articleAlreadyIn = sendLocalStorage.find(articleIn => 
+        articleIn.id === articleBasket.id && articleIn.color === articleBasket.color
+      )
+
+      if (!articleAlreadyIn) {
+        newBasket.push(articleBasket);
       }
-      localStorage.setItem("product", JSON.stringify(sendLocalStorage));
+      
+      localStorage.setItem("product", JSON.stringify(newBasket));
       confirmation();
     } else {
       sendLocalStorage = [];
@@ -91,5 +98,5 @@ function addToBasket(article) {
       localStorage.setItem("product", JSON.stringify(sendLocalStorage));
       confirmation();
     }
-  });
+  })
 }

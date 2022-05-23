@@ -29,7 +29,7 @@ basketList();
 
 function basketList() {
   let articleBasket = "";
-  basket.forEach(article => {
+  basket.forEach((article) => {
     return (articleBasket += `
         <article class="cart__item" data-id="{product-ID}" data-color="{product-color}">
                 <div class="cart__item__img">
@@ -56,4 +56,17 @@ function basketList() {
         `);
   });
   document.getElementById("cart__items").innerHTML = articleBasket;
+}
+
+let deleteButton = document.getElementsByClassName("deleteItem");
+
+for (let l = 0; l < deleteButton.length; l++) {
+  deleteButton[l].addEventListener('click', (event) => {
+    event.preventDefault();
+    let productSelectionDelete = sendLocalStorage[l];
+    sendLocalStorage = sendLocalStorage.filter(el => el.color !== productSelectionDelete.color || el._id !== productSelectionDelete._id);
+    localStorage.setItem("product", JSON.stringify(sendLocalStorage));
+    alert("Ce produit a bien été supprimer du panier");
+    window.location.href = "cart.html";
+  })
 }
