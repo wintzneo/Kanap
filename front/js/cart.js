@@ -1,72 +1,147 @@
-function object(image, description, name, price, color, quantity) {
-  this.image = image;
-  this.description = description;
-  this.price = price;
-  this.name = name;
-  this.color = color;
-  this.quantity = quantity;
-}
-
-let basket = [];
 let sendLocalStorage = JSON.parse(localStorage.getItem("product"));
-if (sendLocalStorage === null || sendLocalStorage === 0) {
-  document.getElementsByClassName("cart").innerHTML = "";
-} else {
-  sendLocalStorage.forEach((sendLocalStorage) => {
-    let productsBasket = new object(
-      sendLocalStorage.image,
-      sendLocalStorage.description,
-      sendLocalStorage.name,
-      sendLocalStorage.price,
-      sendLocalStorage.color,
-      sendLocalStorage.quantity
-    );
-    basket.push(productsBasket);
-  });
+
+viewArticle();
+function viewArticle() {
+  if (!sendLocalStorage) {
+
+    const titleCart = document.querySelector("h1");
+    const sectionCart = document.querySelector(".cart");
+
+    titleCart.innerHTML = "Votre panier est vide !";
+    sectionCart.style.display = "none";
+
+  } else {
+
+    for (let i = 0; i < sendLocalStorage.length; i++) {
+
+      let productCart = document.createElement("article");
+      document.querySelector("#cart__items").appendChild(productCart);
+      productCart.className = "cart__item";
+      productCart.setAttribute("data-id", sendLocalStorage[i].id);
+
+      let productCartImage = document.createElement("div");
+      productCart.appendChild(productCartImage);
+      productCartImage.className = "cart__item__img";
+
+      let productImage = document.createElement("img");
+      productCartImage.appendChild(productImage);
+      productImage.src = sendLocalStorage[i].image;
+      productImage.alt = sendLocalStorage[i].alt;
+
+      let productItemContent = document.createElement("div");
+      productCart.appendChild(productItemContent);
+      productItemContent.className = "cart__item__content";
+
+      let productItemContentTitlePrice = document.createElement("div");
+      productItemContent.appendChild(productItemContentTitlePrice);
+      productItemContentTitlePrice.className = "cart__item__content__titlePrice";
+
+      let productTitle = document.createElement("h2");
+      productItemContentTitlePrice.appendChild(productTitle);
+      productTitle.innerHTML = sendLocalStorage[i].name;
+
+      let productColor = document.createElement("p");
+      productTitle.appendChild(productColor);
+      productColor.innerHTML = sendLocalStorage[i].color;
+      productColor.style.fontSize = "20px";
+
+      let productPrice = document.createElement("p");
+      productItemContentTitlePrice.appendChild(productPrice);
+      productPrice.innerHTML = sendLocalStorage[i].price + " €";
+
+      let productItemContentSettings = document.createElement("div");
+      productItemContent.appendChild(productItemContentSettings);
+      productItemContentSettings.className = "cart__item__content__settings";
+
+      let productItemContentSettingsQuantity = document.createElement("div");
+      productItemContentSettings.appendChild(productItemContentSettingsQuantity);
+      productItemContentSettingsQuantity.className = "cart__item__content__settings__quantity";
+
+      let productQty = document.createElement("p");
+      productItemContentSettingsQuantity.appendChild(productQty);
+      productQty.innerHTML = "Quantité : ";
+
+      let productQuantity = document.createElement("input");
+      productItemContentSettingsQuantity.appendChild(productQuantity);
+      productQuantity.value = sendLocalStorage[i].quantity;
+      productQuantity.className = "itemQuantity";
+      productQuantity.setAttribute("type", "number");
+      productQuantity.setAttribute("min", "1");
+      productQuantity.setAttribute("max", "100");
+      productQuantity.setAttribute("name", "itemQuantity");
+
+      let productItemContentSettingsDelete = document.createElement("div");
+      productItemContentSettings.appendChild(productItemContentSettingsDelete);
+      productItemContentSettingsDelete.className = "cart__item__content__settings__delete";
+
+      let productSupprimer = document.createElement("p");
+      productItemContentSettingsDelete.appendChild(productSupprimer);
+      productSupprimer.className = "deleteItem";
+      productSupprimer.innerHTML = "Supprimer l'article";
+      productSupprimer.addEventListener("click", (event) => {
+        event.preventDefault;
+
+        let deleteId = sendLocalStorage[i].id;
+        let deleteColor = sendLocalStorage[i].color;
+
+        sendLocalStorage = sendLocalStorage.filter(elt => elt.id !== deleteId || elt.color !== deleteColor);
+
+        localStorage.setItem("product", JSON.stringify(sendLocalStorage));
+
+        alert('Votre article a bien été supprimé.');
+
+        if (sendLocalStorage.length === 0) {
+          localStorage.clear();
+        }
+
+        location.reload();
+      });
+    }
+  }
 }
 
-basketList();
+getTotals();
+function getTotals() {
 
-function basketList() {
-  let articleBasket = "";
-  basket.forEach((article) => {
-    return (articleBasket += `
-        <article class="cart__item" data-id="{product-ID}" data-color="{product-color}">
-                <div class="cart__item__img">
-                  <img src="${article.image}" alt="${article.description}"
-                  >
-                </div>
-                <div class="cart__item__content">
-                  <div class="cart__item__content__description">
-                    <h2>${article.name}</h2>
-                    <p>${article.color}</p>
-                    <p>${article.price}€</p>
-                  </div>
-                  <div class="cart__item__content__settings">
-                    <div class="cart__item__content__settings__quantity">
-                      <p>Qté : ${article.quantity}</p>
-                      <input type="number" class="itemQuantity" name="itemQuantity" min="1" max="100" value="${article.quantity}">
-                    </div>
-                    <div class="cart__item__content__settings__delete">
-                      <p class="deleteItem">Supprimer</p>
-                    </div>
-                  </div>
-                </div>
-              </article>
-        `);
-  });
-  document.getElementById("cart__items").innerHTML = articleBasket;
+  let quantityElements = document.getElementsByClassName("itemQuantity");
+  let myProducts = quantityElements.length,
+    quantityTotal = 0;
+
+  for (let i = 0; i < myProducts; ++i) {
+    quantityTotal += quantityElements[i].valueAsNumber;
+  }
+
+  let productTotalQuantity = document.getElementById("totalQuantity");
+  productTotalQuantity.innerHTML = quantityTotal;
+
+  totalPrice = 0;
+  for (let i = 0; i < myProducts; ++i) {
+    totalPrice += (quantityElements[i].value * sendLocalStorage[i].price);
+  }
+
+  let productTotalPrice = document.getElementById("totalPrice");
+  productTotalPrice.innerHTML = totalPrice;
 }
 
-let deleteButton = document.getElementsByClassName("deleteItem");
+modifyQuantity();
+function modifyQuantity() {
+  let modifNumber = document.getElementsByClassName("itemQuantity");
 
-for (let l = 0; l < deleteButton.length; l++) {
-  deleteButton[l].addEventListener('click', (event) => {
-    event.preventDefault();
-    let productSelectionDelete = sendLocalStorage[l];
-    sendLocalStorage = sendLocalStorage.filter(el => el.color !== productSelectionDelete.color || el._id !== productSelectionDelete._id);
-    localStorage.setItem("product", JSON.stringify(sendLocalStorage));
-    alert("Ce produit a bien été supprimer du panier");
-    window.location.href = "cart.html";
-  })
+  for (let k = 0; k < modifNumber.length; k++) {
+    modifNumber[k].addEventListener("change", (event) => {
+      event.preventDefault();
+
+      let quantityModif = sendLocalStorage[k].quantity;
+      let quantityValue = modifNumber[k].value;
+
+      const result = sendLocalStorage.find((el) => el.quantityValue !== quantityModif);
+
+      result.quantity = quantityValue;
+      sendLocalStorage[k].quantity = result.quantity;
+
+      localStorage.setItem("product", JSON.stringify(sendLocalStorage));
+
+      location.reload();
+    })
+  }
 }

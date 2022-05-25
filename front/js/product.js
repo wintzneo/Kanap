@@ -47,6 +47,7 @@ function addToBasket(article) {
     event.preventDefault();
     let articleBasket = {
       id: article._id,
+      alt: article.altTxt,
       name: article.name,
       image: article.imageUrl,
       price: article.price,
