@@ -145,3 +145,124 @@ function modifyQuantity() {
     })
   }
 }
+
+getForm();
+function getForm() {
+
+  let form = document.querySelector(".cart__order__form");
+
+  let emailReg = new RegExp('^[a-zA-Z0-9.-_]+[@]{1}[a-zA-Z0-9.-_]+[.]{1}[a-z]{2,10}$');
+  let charReg = new RegExp("^[a-zA-Z ,.'-]+$");
+  let addressReg = new RegExp("^[0-9]{1,3}(?:(?:[,. ]){1}[-a-zA-Zàâäéèêëïîôöùûüç]+)+");
+
+  form.firstName.addEventListener('change', function () {
+    validFirstName(this);
+  });
+
+  form.lastName.addEventListener('change', function () {
+    validLastName(this);
+  });
+
+  form.address.addEventListener('change', function () {
+    validAddress(this);
+  });
+
+  form.city.addEventListener('change', function () {
+    validCity(this);
+  });
+
+  form.email.addEventListener('change', function () {
+    validEmail(this);
+  });
+
+  const validFirstName = function (inputFirstName) {
+    let firstNameErrorMsg = inputFirstName.nextElementSibling;
+
+    if (charReg.test(inputFirstName.value)) {
+      firstNameErrorMsg.innerHTML = '';
+    } else {
+      firstNameErrorMsg.innerHTML = 'Veuillez renseigner votre prénom.';
+    }
+  };
+
+  const validLastName = function (inputLastName) {
+    let lastNameErrorMsg = inputLastName.nextElementSibling;
+
+    if (charReg.test(inputLastName.value)) {
+      lastNameErrorMsg.innerHTML = '';
+    } else {
+      lastNameErrorMsg.innerHTML = 'Veuillez renseigner votre nom.';
+    }
+  };
+
+  const validAddress = function (inputAddress) {
+    let addressErrorMsg = inputAddress.nextElementSibling;
+
+    if (addressReg.test(inputAddress.value)) {
+      addressErrorMsg.innerHTML = '';
+    } else {
+      addressErrorMsg.innerHTML = 'Veuillez renseigner votre adresse.';
+    }
+  };
+
+  const validCity = function (inputCity) {
+    let cityErrorMsg = inputCity.nextElementSibling;
+
+    if (charReg.test(inputCity.value)) {
+      cityErrorMsg.innerHTML = '';
+    } else {
+      cityErrorMsg.innerHTML = 'Veuillez renseigner votre ville.';
+    }
+  };
+
+  const validEmail = function (inputEmail) {
+    let emailErrorMsg = inputEmail.nextElementSibling;
+
+    if (emailReg.test(inputEmail.value)) {
+      emailErrorMsg.innerHTML = '';
+    } else {
+      emailErrorMsg.innerHTML = 'Veuillez renseigner votre email.';
+    }
+  };
+}
+
+sendForm();
+function sendForm() {
+  const order = document.getElementById('order');
+  order.addEventListener('click', (event) => {
+    event.preventDefault();
+
+    const contact = {
+      firstName: document.getElementById('firstName').value,
+      lastName: document.getElementById('lastName').value,
+      address: document.getElementById('address').value,
+      city: document.getElementById('city').value,
+      email: document.getElementById('email').value
+    }
+
+    let products = [];
+    for (let i = 0; i < sendLocalStorage.length; i++) {
+      products.push(sendLocalStorage[i].id);
+    }
+
+    const valueData = {
+      contact,
+      products,
+    }
+
+    const sendData = {
+      method: 'POST',
+      body: JSON.stringify(valueData),
+      headers: {
+        'Content-Type': 'application/json',
+      }
+    };
+
+    fetch("http://localhost:3000/api/products/order", sendData)
+      .then(response => response.json())
+      .then(data => {
+        localStorage.setItem('orderId', data.orderId);
+        document.location.href = 'confirmation.html?id=' + data.orderId;
+      });
+  });
+}
