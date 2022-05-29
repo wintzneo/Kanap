@@ -123,27 +123,25 @@ function getTotals() {
   productTotalPrice.innerHTML = totalPrice;
 }
 
-modifyQuantity();
+let modifNumber = document.getElementsByClassName("itemQuantity");
+for (let k = 0; k < modifNumber.length; k++) {
+  modifNumber[k].addEventListener("change", modifyQuantity)
+}
 function modifyQuantity() {
-  let modifNumber = document.getElementsByClassName("itemQuantity");
 
-  for (let k = 0; k < modifNumber.length; k++) {
-    modifNumber[k].addEventListener("change", (event) => {
-      event.preventDefault();
+  let input = this;
 
-      let quantityModif = sendLocalStorage[k].quantity;
-      let quantityValue = modifNumber[k].value;
+  
 
-      const result = sendLocalStorage.find((el) => el.quantityValue !== quantityModif);
+  let quantityModif = sendLocalStorage[k].quantity;
+  let quantityValue = modifNumber[k].value;
 
-      result.quantity = quantityValue;
-      sendLocalStorage[k].quantity = result.quantity;
+  const result = sendLocalStorage.find((el) => el.quantityValue !== quantityModif);
 
-      localStorage.setItem("product", JSON.stringify(sendLocalStorage));
+  result.quantity = quantityValue;
+  sendLocalStorage[k].quantity = result.quantity;
 
-      location.reload();
-    })
-  }
+  localStorage.setItem("product", JSON.stringify(sendLocalStorage));
 }
 
 getForm();
