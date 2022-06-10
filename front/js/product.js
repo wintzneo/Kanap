@@ -5,10 +5,12 @@
   addToBasket(article);
 })();
 
+//Récupération de l'id via les paramètres de l'url
 function getArticleId() {
   return new URL(location.href).searchParams.get("id");
 }
 
+//Récupération du tableau des produits disponibles
 function getArticle(articleId) {
   return fetch("http://localhost:3000/api/products/" + articleId)
     .then(function (httpResponse) {
@@ -22,6 +24,7 @@ function getArticle(articleId) {
     });
 }
 
+//Récupération de l'article + affichage des données de ce dernier
 function viewArticle(article) {
   document.getElementById("item__imgId").src = article.imageUrl;
   document.getElementById("item__imgId").alt = article.altTxt;
@@ -37,12 +40,13 @@ function viewArticle(article) {
   }
 }
 
+// Ajouté un article au panier
 function addToBasket(article) {
   let numberProduct = document.getElementById("quantity");
   let sendToCart = document.getElementById("addToCart");
   let color = document.getElementById("colors");
 
-
+  // Envoi des informations du produit au panier
   sendToCart.addEventListener("click", (event) => {
     event.preventDefault();
     let articleBasket = {
@@ -55,7 +59,7 @@ function addToBasket(article) {
       color: color.value,
     };
 
-
+    // Message de confirmation
     let confirmation = () => {
       if (
         window.confirm(`Votre produit 
@@ -74,6 +78,7 @@ function addToBasket(article) {
 
     let sendLocalStorage = JSON.parse(localStorage.getItem("product"));
 
+    //Si le produit commandé est déjà dans le panier
     if (sendLocalStorage) {
       const newBasket = sendLocalStorage.map(articleIn => {
         if (articleIn.id === articleBasket.id && articleIn.color === articleBasket.color) {
@@ -93,6 +98,8 @@ function addToBasket(article) {
       
       localStorage.setItem("product", JSON.stringify(newBasket));
       confirmation();
+      
+    //Si le produit commandé n'est pas dans le panier
     } else {
       sendLocalStorage = [];
       sendLocalStorage.push(articleBasket);

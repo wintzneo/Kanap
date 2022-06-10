@@ -3,59 +3,80 @@ function getCartStorage() {
   return JSON.parse(localStorage.getItem("product"));
 }
 
+// Récupération de l'id
+async function getProduct(id) {
+  return fetch("http://localhost:3000/api/products/" + id)
+    .then(response => response.json())
+    .catch(error => alert("Erreur : " + error));
+}
+
+// Création des différents éléments et insertion dans la section
 viewArticle();
 function viewArticle() {
   const sendLocalStorage = getCartStorage();
+  
   for (let i = 0; i < sendLocalStorage.length; i++) {
 
+    // Création de la balise "article" et insertion dans la section
     let productCart = document.createElement("article");
     document.querySelector("#cart__items").appendChild(productCart);
     productCart.className = "cart__item";
     productCart.setAttribute("data-id", sendLocalStorage[i].id);
     productCart.setAttribute("data-color", sendLocalStorage[i].color);
 
+    // Insertion de l'élément "div" pour l'image produit
     let productCartImage = document.createElement("div");
     productCart.appendChild(productCartImage);
     productCartImage.className = "cart__item__img";
 
+    // Insertion de l'image
     let productImage = document.createElement("img");
     productCartImage.appendChild(productImage);
     productImage.src = sendLocalStorage[i].image;
     productImage.alt = sendLocalStorage[i].alt;
 
+    // Insertion de l'élément "div" pour la description produit
     let productItemContent = document.createElement("div");
     productCart.appendChild(productItemContent);
     productItemContent.className = "cart__item__content";
 
+    // Insertion de l'élément "div"
     let productItemContentTitlePrice = document.createElement("div");
     productItemContent.appendChild(productItemContentTitlePrice);
     productItemContentTitlePrice.className = "cart__item__content__titlePrice";
 
+    // Insertion du titre h2
     let productTitle = document.createElement("h2");
     productItemContentTitlePrice.appendChild(productTitle);
     productTitle.innerHTML = sendLocalStorage[i].name;
 
+    // Insertion de la couleur
     let productColor = document.createElement("p");
     productTitle.appendChild(productColor);
     productColor.innerHTML = sendLocalStorage[i].color;
     productColor.style.fontSize = "20px";
 
+    // Insertion du prix
     let productPrice = document.createElement("p");
     productItemContentTitlePrice.appendChild(productPrice);
     productPrice.innerHTML = sendLocalStorage[i].price + " €";
 
+    // Insertion de l'élément "div"
     let productItemContentSettings = document.createElement("div");
     productItemContent.appendChild(productItemContentSettings);
     productItemContentSettings.className = "cart__item__content__settings";
 
+    // Insertion de l'élément "div"
     let productItemContentSettingsQuantity = document.createElement("div");
     productItemContentSettings.appendChild(productItemContentSettingsQuantity);
     productItemContentSettingsQuantity.className = "cart__item__content__settings__quantity";
 
+    // Insertion de "Qté : "
     let productQty = document.createElement("p");
     productItemContentSettingsQuantity.appendChild(productQty);
     productQty.innerHTML = "Quantité : ";
 
+    // Insertion de la quantité
     let productQuantity = document.createElement("input");
     productItemContentSettingsQuantity.appendChild(productQuantity);
     productQuantity.value = sendLocalStorage[i].quantity;
@@ -65,10 +86,12 @@ function viewArticle() {
     productQuantity.setAttribute("max", "100");
     productQuantity.setAttribute("name", "itemQuantity");
 
+    // Insertion de l'élément "div"
     let productItemContentSettingsDelete = document.createElement("div");
     productItemContentSettings.appendChild(productItemContentSettingsDelete);
     productItemContentSettingsDelete.className = "cart__item__content__settings__delete";
 
+    // Insertion de "p" supprimer
     let productSupprimer = document.createElement("p");
     productItemContentSettingsDelete.appendChild(productSupprimer);
     productSupprimer.className = "deleteItem";
@@ -76,13 +99,7 @@ function viewArticle() {
   }
 }
 
-
-async function getProduct(id) {
-  return fetch("http://localhost:3000/api/products/" + id)
-    .then(response => response.json())
-    .catch(error => alert("Erreur : " + error));
-}
-
+// Récupération du prix et quantités total
 async function showPrice() {
   const sendLocalStorage = getCartStorage();
   if (!sendLocalStorage.length) {
@@ -111,6 +128,8 @@ async function showPrice() {
 }
 showPrice();
 
+
+// Modification des quantités des articles dans le panier
 modifyQuantity();
 function modifyQuantity() {
   const sendLocalStorage = getCartStorage();
@@ -139,6 +158,7 @@ function modifyQuantity() {
   };
 }
 
+// Suppression de l'article dans le panier
 delProduct();
 function delProduct() {
   let sendLocalStorage = getCartStorage();
@@ -166,35 +186,45 @@ function delProduct() {
   };
 }
 
+//Création des expressions régulières
 let emailReg = new RegExp('^[a-zA-Z0-9.-_]+[@]{1}[a-zA-Z0-9.-_]+[.]{1}[a-z]{2,10}$');
 let charReg = new RegExp("^[a-zA-Z ,.'-]+$");
 let addressReg = new RegExp("^[0-9]{1,3}(?:(?:[,. ]){1}[-a-zA-Zàâäéèêëïîôöùûüç]+)+");
 
 getForm();
+
+//Instauration formulaire avec regex
 function getForm() {
 
+  // Ajout des Regex
   let form = document.querySelector(".cart__order__form");
 
+  //Ecoute de la modification du prénom
   form.firstName.addEventListener('change', function () {
     validFirstName(this);
   });
 
+  //Ecoute de la modification du nom
   form.lastName.addEventListener('change', function () {
     validLastName(this);
   });
 
+  //Ecoute de la modification de l'adresse
   form.address.addEventListener('change', function () {
     validAddress(this);
   });
 
+  //Ecoute de la modification de la ville
   form.city.addEventListener('change', function () {
     validCity(this);
   });
 
+  //Ecoute de la modification de l'email
   form.email.addEventListener('change', function () {
     validEmail(this);
   });
 
+  //validation du prénom
   const validFirstName = function (inputFirstName) {
     let firstNameErrorMsg = inputFirstName.nextElementSibling;
 
@@ -205,6 +235,7 @@ function getForm() {
     }
   };
 
+  //validation du nom
   const validLastName = function (inputLastName) {
     let lastNameErrorMsg = inputLastName.nextElementSibling;
 
@@ -215,6 +246,7 @@ function getForm() {
     }
   };
 
+  //validation de l'adresse
   const validAddress = function (inputAddress) {
     let addressErrorMsg = inputAddress.nextElementSibling;
 
@@ -225,6 +257,7 @@ function getForm() {
     }
   };
 
+  //validation de la ville
   const validCity = function (inputCity) {
     let cityErrorMsg = inputCity.nextElementSibling;
 
@@ -235,6 +268,7 @@ function getForm() {
     }
   };
 
+  //validation de l'email
   const validEmail = function (inputEmail) {
     let emailErrorMsg = inputEmail.nextElementSibling;
 
@@ -246,6 +280,7 @@ function getForm() {
   };
 }
 
+// Envoi du formulaire
 sendForm();
 function sendForm() {
   let sendLocalStorage = getCartStorage();
@@ -267,12 +302,15 @@ function sendForm() {
       } else if (charReg.test(inputFirstName.value) ==  false || charReg.test(inputLastName.value) ==  false || addressReg.test(inputAddress.value) ==  false || charReg.test(inputCity.value) ==  false || emailReg.test(inputEmail.value) ==  false) {
           alert("Vérifiez vos coordonnées pour passer la commande !");
           event.preventDefault();
+
+      //Construction d'un array d'id depuis le local storage
       } else {
           products = [];
           for (let m = 0; m < sendLocalStorage.length; m++) {
           products.push(sendLocalStorage[m].id);
           }
   
+          // Récupèration des données du formulaire dans un objet
           let order = {
           contact : {
               firstName: inputFirstName.value,
@@ -283,6 +321,11 @@ function sendForm() {
           },
           products : products
           }
+
+
+
+    
+          // Envoi du formulaire + localStorage
 
           const sendData = {
             method: 'POST',
