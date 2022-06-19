@@ -54,7 +54,6 @@ function addToBasket(article) {
       alt: article.altTxt,
       name: article.name,
       image: article.imageUrl,
-      price: article.price,
       quantity: Number(numberProduct.value),
       color: color.value,
     };

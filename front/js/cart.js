@@ -12,10 +12,12 @@ async function getProduct(id) {
 
 // Création des différents éléments et insertion dans la section
 viewArticle();
-function viewArticle() {
+
+async function viewArticle() {
   const sendLocalStorage = getCartStorage();
-  
+
   for (let i = 0; i < sendLocalStorage.length; i++) {
+    let product = await getProduct(sendLocalStorage[i].id)
 
     // Création de la balise "article" et insertion dans la section
     let productCart = document.createElement("article");
@@ -59,7 +61,7 @@ function viewArticle() {
     // Insertion du prix
     let productPrice = document.createElement("p");
     productItemContentTitlePrice.appendChild(productPrice);
-    productPrice.innerHTML = sendLocalStorage[i].price + " €";
+    productPrice.innerHTML =  product.price + " €";
 
     // Insertion de l'élément "div"
     let productItemContentSettings = document.createElement("div");
@@ -97,9 +99,7 @@ function viewArticle() {
     productSupprimer.className = "deleteItem";
     productSupprimer.innerHTML = "Supprimer l'article";
   }
-}
-
-// Récupération du prix et quantités total
+  // Récupération du prix et quantités total
 async function showPrice() {
   const sendLocalStorage = getCartStorage();
   if (!sendLocalStorage.length) {
@@ -185,6 +185,9 @@ function delProduct() {
     })
   };
 }
+}
+
+
 
 //Création des expressions régulières
 let emailReg = new RegExp('^[a-zA-Z0-9.-_]+[@]{1}[a-zA-Z0-9.-_]+[.]{1}[a-z]{2,10}$');

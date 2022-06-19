@@ -2,7 +2,12 @@ viewArticle();
 function viewArticle() {
   const sendLocalStorage = getCartStorage();
 
+  async function viewArticle() {
+    const sendLocalStorage = getCartStorage();
   
+    for (let i = 0; i < sendLocalStorage.length; i++) {
+      let product = await getProduct(sendLocalStorage[i].id)
+
   for (let i = 0; i < sendLocalStorage.length; i++) {
 
     let id = sendLocalStorage[i].id
@@ -80,3 +85,9 @@ function viewArticle() {
     .catch(error => alert("Erreur : " + error));
   }
 }
+
+async function viewArticle() {
+  const sendLocalStorage = getCartStorage();
+
+  for (let i = 0; i < sendLocalStorage.length; i++) {
+    let product = await getProduct(sendLocalStorage[i].id)
