@@ -42,8 +42,8 @@ function viewArticle(article) {
 
 // Ajouté un article au panier
 function addToBasket(article) {
-  let numberProduct = document.getElementById("quantity");
   let sendToCart = document.getElementById("addToCart");
+  let numberProduct = document.getElementById("quantity");
   let color = document.getElementById("colors");
 
   // Envoi des informations du produit au panier
@@ -76,34 +76,58 @@ function addToBasket(article) {
     };
 
     let sendLocalStorage = JSON.parse(localStorage.getItem("product"));
+    let totalQuantity = 0;
 
-    //Si le produit commandé est déjà dans le panier
-    if (sendLocalStorage) {
-      const newBasket = sendLocalStorage.map(articleIn => {
-        if (articleIn.id === articleBasket.id && articleIn.color === articleBasket.color) {
-          articleIn.quantity = articleIn.quantity + articleBasket.quantity; 
+    for (let i = 0; i < sendLocalStorage.length; i++) {
+      basketProduct = sendLocalStorage[i];
+      totalQuantity += basketProduct.quantity;
+    }
+
+    const allQuantity = parseInt(totalQuantity) + parseInt(numberProduct.value);
+
+    if (
+      allQuantity > 100
+    ) {
+      alert("Vous ne pouvez ajouter plus de 100 articles dans le panier !");
+    }
+
+    if (
+      allQuantity <= 100
+    ) {
+      let sendLocalStorage = JSON.parse(localStorage.getItem("product"));
+
+      //Si le produit commandé est déjà dans le panier
+      if (sendLocalStorage) {
+        const newBasket = sendLocalStorage.map((articleIn) => {
+          if (
+            articleIn.id === articleBasket.id &&
+            articleIn.color === articleBasket.color
+          ) {
+            articleIn.quantity = articleIn.quantity + articleBasket.quantity;
+          }
+          return articleIn;
+        });
+
+        const articleAlreadyIn = sendLocalStorage.find(
+          (articleIn) =>
+            articleIn.id === articleBasket.id &&
+            articleIn.color === articleBasket.color
+        );
+
+        if (!articleAlreadyIn) {
+          newBasket.push(articleBasket);
         }
 
-        return articleIn;
-      });
+        localStorage.setItem("product", JSON.stringify(newBasket));
+        confirmation();
 
-      const articleAlreadyIn = sendLocalStorage.find(articleIn => 
-        articleIn.id === articleBasket.id && articleIn.color === articleBasket.color
-      )
-
-      if (!articleAlreadyIn) {
-        newBasket.push(articleBasket);
+        //Si le produit commandé n'est pas dans le panier
+      } else {
+        sendLocalStorage = [];
+        sendLocalStorage.push(articleBasket);
+        localStorage.setItem("product", JSON.stringify(sendLocalStorage));
+        confirmation();
       }
-      
-      localStorage.setItem("product", JSON.stringify(newBasket));
-      confirmation();
-      
-    //Si le produit commandé n'est pas dans le panier
-    } else {
-      sendLocalStorage = [];
-      sendLocalStorage.push(articleBasket);
-      localStorage.setItem("product", JSON.stringify(sendLocalStorage));
-      confirmation();
     }
-  })
+  });
 }

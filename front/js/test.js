@@ -1,93 +1,101 @@
-viewArticle();
-function viewArticle() {
-  const sendLocalStorage = getCartStorage();
+function addToCart() {
 
-  async function viewArticle() {
-    const sendLocalStorage = getCartStorage();
-  
-    for (let i = 0; i < sendLocalStorage.length; i++) {
-      let product = await getProduct(sendLocalStorage[i].id)
+    const colorChoice = document. querySelector("#colors");
+    const quantityChoice = document.querySelector("#quantity");
 
-  for (let i = 0; i < sendLocalStorage.length; i++) {
+    if (quantityChoice.value > 0 && quantityChoice.value <=100 && quantityChoice.value != 0 && colorChoice.value != 0) { 
 
-    let id = sendLocalStorage[i].id
+        if (localStorage.getItem("cart")) {
+    
+            let productCart = JSON.parse(localStorage.getItem("cart"));
+            console.log(productCart);
 
-    fetch("http://localhost:3000/api/products/" + id)
-    .then(response => response.json())
-    .then (product => {
-      console.log(product)
-      let productCart = document.createElement("article");
-    document.querySelector("#cart__items").appendChild(productCart);
-    productCart.className = "cart__item";
-    productCart.setAttribute("data-id", sendLocalStorage[i].id);
-    productCart.setAttribute("data-color", product.color);
+            let idKanap = idProduct;
+            let colorKanap = document.querySelector("#colors").value;
+            let qtyKanap = document.querySelector("#quantity").value;
 
-    let productCartImage = document.createElement("div");
-    productCart.appendChild(productCartImage);
-    productCartImage.className = "cart__item__img";
+            const resultFind = productCart.find(
+                (el) => el.idKanap === idProduct && el.colorKanap === colorKanap);
+                //Si le produit commandé est déjà dans le panier
+                console.log("result find est egal a :");
+                console.log(resultFind);
+                console.log("fin result find");
 
-    let productImage = document.createElement("img");
-    productCartImage.appendChild(productImage);
-    productImage.src = product.imageUrl;
-    productImage.alt = product.altTxt;
+                if (resultFind) {
+                    console.log("resultfind kanap = " + resultFind.qtyKanap);
+                    console.log("qtykanap = " + qtyKanap);
+                    let newQuantite = parseInt(qtyKanap) + parseInt(resultFind.qtyKanap);
+                    console.log("newQtt est egal a : " + newQuantite);
+                    resultFind.qtyKanap = newQuantite;
+                    localStorage.setItem("cart", JSON.stringify(productCart));
+                    console.log("productCart egal :");
+                    console.log(productCart);
+                    console.log("fin productCart");
+                //Si le produit commandé n'est pas dans le panier
+                } else {
+                    
+                    let productCart = JSON.parse(localStorage.getItem("cart"));
 
-    let productItemContent = document.createElement("div");
-    productCart.appendChild(productItemContent);
-    productItemContent.className = "cart__item__content";
+                    let idKanap = idProduct;
+                    let nameKanap = document.querySelector("#title").textContent;
+                    let colorKanap = document.querySelector("#colors").value;
+                    let qtyKanap = document.querySelector("#quantity").value;
+                    let imgKanap = img.src; 
+                    let altImg = img.alt;
+                    let priceKanap = document.querySelector("#price").textContent;
+                    
+                    console.log(img);
+                    console.log(idKanap, nameKanap, colorKanap, qtyKanap, imgKanap, altImg, priceKanap);
+                
+                    let productCartObj = {
+                        idKanap : idProduct,
+                        nameKanap : nameKanap,
+                        colorKanap : colorKanap,
+                        qtyKanap  : qtyKanap,
+                        imgKanap : imgKanap,
+                        altImg : altImg,
+                        priceKanap : priceKanap
+                    };
+                
+                    productCart.push(productCartObj);
+                
+                    let objCart = JSON.stringify(productCart);
+                    localStorage.setItem("cart", objCart);
+                
+                    alert("Ajouté au panier !");
+                }
 
-    let productItemContentTitlePrice = document.createElement("div");
-    productItemContent.appendChild(productItemContentTitlePrice);
-    productItemContentTitlePrice.className = "cart__item__content__titlePrice";
+        } else {
 
-    let productTitle = document.createElement("h2");
-    productItemContentTitlePrice.appendChild(productTitle);
-    productTitle.innerHTML = product.name;
+            let productCart = [];
 
-    let productColor = document.createElement("p");
-    productTitle.appendChild(productColor);
-    productColor.innerHTML = sendLocalStorage[i].color;
-    productColor.style.fontSize = "20px";
-
-    let productPrice = document.createElement("p");
-    productItemContentTitlePrice.appendChild(productPrice);
-    productPrice.innerHTML = product.price + " €";
-
-    let productItemContentSettings = document.createElement("div");
-    productItemContent.appendChild(productItemContentSettings);
-    productItemContentSettings.className = "cart__item__content__settings";
-
-    let productItemContentSettingsQuantity = document.createElement("div");
-    productItemContentSettings.appendChild(productItemContentSettingsQuantity);
-    productItemContentSettingsQuantity.className = "cart__item__content__settings__quantity";
-
-    let productQty = document.createElement("p");
-    productItemContentSettingsQuantity.appendChild(productQty);
-    productQty.innerHTML = "Quantité : ";
-
-    let productQuantity = document.createElement("input");
-    productItemContentSettingsQuantity.appendChild(productQuantity);
-    productQuantity.value = sendLocalStorage[i].quantity;
-    productQuantity.className = "itemQuantity";
-    productQuantity.setAttribute("type", "number");
-    productQuantity.setAttribute("min", "1");
-    productQuantity.setAttribute("max", "100");
-    productQuantity.setAttribute("name", "itemQuantity");
-
-    let productItemContentSettingsDelete = document.createElement("div");
-    productItemContentSettings.appendChild(productItemContentSettingsDelete);
-    productItemContentSettingsDelete.className = "cart__item__content__settings__delete";
-
-    let productSupprimer = document.createElement("p");
-    productItemContentSettingsDelete.appendChild(productSupprimer);
-    productSupprimer.className = "deleteItem";
-    productSupprimer.innerHTML = "Supprimer l'article";
-    })
-    .catch(error => alert("Erreur : " + error));
-  }
+            let idKanap = idProduct;
+            let nameKanap = document.querySelector("#title").textContent;
+            let colorKanap = document.querySelector("#colors").value;
+            let qtyKanap = document.querySelector("#quantity").value;
+            let imgKanap = img.src; 
+            let altImg = img.alt;
+            let priceKanap = document.querySelector("#price").textContent;
+            
+            console.log(img);
+            console.log(idKanap, nameKanap, colorKanap, qtyKanap, imgKanap, altImg, priceKanap);
+        
+            let productCartObj = {
+                idKanap : idProduct,
+                nameKanap : nameKanap,
+                colorKanap : colorKanap,
+                qtyKanap  : qtyKanap,
+                imgKanap : imgKanap,
+                altImg : altImg,
+                priceKanap : priceKanap
+            };
+        
+            productCart.push(productCartObj);
+        
+            let objCart = JSON.stringify(productCart);
+            localStorage.setItem("cart", objCart);
+        
+            alert("Ajouté au panier !");    
+        }
+    }
 }
-
-async function viewArticle() {
-  const sendLocalStorage = getCartStorage();
-
-  for (let i = 0; i < sendLocalStorage.length; i++) {
-    let product = await getProduct(sendLocalStorage[i].id)
