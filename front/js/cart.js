@@ -134,17 +134,21 @@ async function viewArticle() {
   function modifyQuantity() {
     const sendLocalStorage = getCartStorage();
     const modifNumber = document.querySelectorAll('.itemQuantity');
-    let totalQuantity = 0;
+
+    let totalQuantity = 0;  
 
     for (let i = 0; i < sendLocalStorage.length; i++) {
       basketProduct = sendLocalStorage[i];
       totalQuantity += basketProduct.quantity;
     }
+    
 
-    if (
-      totalQuantity < 100
-    ) {
-      
+    if (parseInt(totalQuantity) >= 100) {
+      alert("Vous ne pouvez ajouter plus de 100 articles dans le panier !");
+    }
+
+    if (parseInt(totalQuantity) <= 100) {
+
       for (let k = 0; k < modifNumber.length; k++) {
         modifNumberItem = modifNumber[k];
         modifNumberItem.addEventListener('change', function (event) {
@@ -155,6 +159,8 @@ async function viewArticle() {
             let ItemID = Item.getAttribute("data-id");
             let ItemColor = Item.getAttribute("data-color");
             newQuantityValue = event.target.valueAsNumber;
+            console.log(basketProduct)
+            console.log(newQuantityValue)
 
             if (basketProduct.id == ItemID && basketProduct.color == ItemColor) {
               qtyToAdd = newQuantityValue - basketProduct.quantity;
@@ -165,7 +171,8 @@ async function viewArticle() {
             }
           }
           showPrice();
-        })
+        }
+        )
       };
     }
 
@@ -206,7 +213,6 @@ async function viewArticle() {
   let addressReg = new RegExp("^[0-9]{1,3}(?:(?:[,. ]){1}[-a-zA-Zàâäéèêëïîôöùûüç]+)+");
 
   getForm();
-
   //Instauration formulaire avec regex
   function getForm() {
 
