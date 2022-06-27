@@ -128,7 +128,6 @@ async function viewArticle() {
   }
   showPrice();
 
-
   // Modification des quantités des articles dans le panier
   modifyQuantity();
   function modifyQuantity() {
@@ -141,13 +140,6 @@ async function viewArticle() {
       basketProduct = sendLocalStorage[i];
       totalQuantity += basketProduct.quantity;
     }
-    
-
-    if (parseInt(totalQuantity) >= 100) {
-      alert("Vous ne pouvez ajouter plus de 100 articles dans le panier !");
-    }
-
-    if (parseInt(totalQuantity) <= 100) {
 
       for (let k = 0; k < modifNumber.length; k++) {
         modifNumberItem = modifNumber[k];
@@ -159,8 +151,6 @@ async function viewArticle() {
             let ItemID = Item.getAttribute("data-id");
             let ItemColor = Item.getAttribute("data-color");
             newQuantityValue = event.target.valueAsNumber;
-            console.log(basketProduct)
-            console.log(newQuantityValue)
 
             if (basketProduct.id == ItemID && basketProduct.color == ItemColor) {
               qtyToAdd = newQuantityValue - basketProduct.quantity;
@@ -174,7 +164,7 @@ async function viewArticle() {
         }
         )
       };
-    }
+    
 
     // Suppression de l'article dans le panier
     delProduct();
@@ -204,8 +194,6 @@ async function viewArticle() {
       };
     }
   }
-
-
 
   //Création des expressions régulières
   let emailReg = new RegExp('^[a-zA-Z0-9.-_]+[@]{1}[a-zA-Z0-9.-_]+[.]{1}[a-z]{2,10}$');

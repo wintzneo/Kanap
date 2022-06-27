@@ -83,12 +83,12 @@ function addToBasket(article) {
       totalQuantity += basketProduct.quantity;
     }
 
-    const allQuantity = parseInt(totalQuantity) + parseInt(numberProduct.value);
+    const allQuantity = parseInt(numberProduct.value);
 
     if (
       allQuantity > 100
     ) {
-      alert("Vous ne pouvez ajouter plus de 100 articles dans le panier !");
+      alert("Vous ne pouvez ajouter plus de 100 articles dans le panier en même temps !");
     }
 
     if (
