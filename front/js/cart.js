@@ -42,6 +42,7 @@ async function viewArticle() {
     productCart.appendChild(productItemContent);
     productItemContent.className = "cart__item__content";
 
+    
     // Insertion de l'élément "div"
     let productItemContentTitlePrice = document.createElement("div");
     productItemContent.appendChild(productItemContentTitlePrice);

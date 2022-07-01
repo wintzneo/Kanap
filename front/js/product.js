@@ -78,7 +78,7 @@ function addToBasket(article) {
     let sendLocalStorage = JSON.parse(localStorage.getItem("product"));
     let totalQuantity = 0;
 
-    for (let i = 0; i < sendLocalStorage.length; i++) {
+    for (let i = 0; i < sendLocalStorage; i++) {
       basketProduct = sendLocalStorage[i];
       totalQuantity += basketProduct.quantity;
     }
