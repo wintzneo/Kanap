@@ -92,7 +92,7 @@ function addToBasket(article) {
     }
 
     if (
-      allQuantity <= 100
+      allQuantity <= 100 && color.value != 0
     ) {
       let sendLocalStorage = JSON.parse(localStorage.getItem("product"));
 
